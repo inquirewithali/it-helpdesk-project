@@ -447,7 +447,7 @@ def main():
              delta_html(total, prev_total, higher_is_better=False), "#388bfd")
     kpi_card(k2, f"{res_rate:.1f}%", "Resolution Rate",
              delta_html(res_rate, prev_res_rate), "#3fb950")
-    kpi_card(k3, f"{mttr:.1f} hrs",  "Avg MTTR",
+    kpi_card(k3, f"{mttr:.1f}h",  "Avg MTTR",
              delta_html(mttr, prev_mttr, higher_is_better=False), "#f0883e")
     kpi_card(k4, f"{sla_pct:.1f}%",  "SLA Compliance",
              delta_html(sla_pct, prev_sla_pct), "#3fb950" if sla_pct >= 90 else "#f0883e")
