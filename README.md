@@ -2,7 +2,7 @@
 
 An interactive analytics dashboard for IT support ticket data — built with Streamlit and Plotly. Demonstrates end-to-end data analyst skills: realistic data generation, SQL-style analysis, KPI design, and interactive visualization.
 
-![Dashboard Preview](output/dashboard.png)
+![Dashboard Preview](output/dashboard.png?v=2)
 
 > **Live demo:** `streamlit run app.py` → opens at `http://localhost:8501`
 
