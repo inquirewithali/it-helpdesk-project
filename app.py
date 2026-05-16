@@ -110,7 +110,7 @@ def get_prior(df, d_start, d_end):
 
 def delta_html(curr, prev, higher_is_better=True):
     if prev == 0 or pd.isna(prev):
-        return '<span class="delta-neut">— no prior data</span>'
+        return ""
     pct   = (curr - prev) / abs(prev) * 100
     arrow = "▲" if pct > 0 else "▼"
     good  = pct > 0 if higher_is_better else pct < 0
