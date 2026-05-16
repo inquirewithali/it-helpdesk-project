@@ -186,19 +186,19 @@ def chart_priority_donut(df):
         textinfo="none",
         hovertemplate="<b>%{label}</b><br>Tickets: %{value}<extra></extra>",
     ))
+    fig = fig_base(fig, height=320)
     fig.update_layout(
         title=dict(text="Priority Split", y=0.97, x=0.5, xanchor="center"),
-        showlegend=True,
-        margin=dict(l=10, r=10, t=50, b=80),
+        margin=dict(l=10, r=10, t=50, b=60),
         legend=dict(
             orientation="h",
             x=0.5, xanchor="center",
-            y=0.08, yanchor="top",
+            y=0.12, yanchor="top",
             font=dict(size=9),
             bgcolor="rgba(0,0,0,0)",
         ),
     )
-    return fig_base(fig, height=320)
+    return fig
 
 
 def chart_sla_by_priority(df):
