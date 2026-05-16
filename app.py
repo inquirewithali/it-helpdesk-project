@@ -50,8 +50,23 @@ st.markdown("""
     .insight-good { border-left-color: #3fb950; }
     .insight-bad  { border-left-color: #f85149; }
 
-    #MainMenu, footer, header { visibility: hidden; }
+    #MainMenu, footer { visibility: hidden; }
+    header { visibility: hidden; }
+    [data-testid="collapsedControl"] { visibility: visible !important; }
     .block-container { padding-top: 1.2rem; }
+
+    .find-bar input {
+        background: #1e2530 !important;
+        border: 1px solid #30363d !important;
+        border-radius: 8px !important;
+        color: #c9d1d9 !important;
+        font-size: 0.9rem !important;
+    }
+    .match-count {
+        font-size: 0.78rem;
+        color: #8b949e;
+        margin-top: 4px;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -556,27 +571,49 @@ def main():
 
     # Ticket Explorer ──────────────────────────────────────────────────────────
     with tab4:
-        te1, te2, te3 = st.columns(3)
-        with te1:
+        fa, fb, fc, fd = st.columns([2, 1, 1, 1])
+        with fa:
+            find_query = st.text_input("🔍 Find on page",
+                                       placeholder="Search ticket ID, subject, agent, category…")
+        with fb:
             sort_col = st.selectbox("Sort by", ["created_at", "resolution_hours",
                                                 "satisfaction_score", "priority", "ticket_id"])
-        with te2:
+        with fc:
             sort_dir = st.radio("Order", ["Descending", "Ascending"], horizontal=True)
-        with te3:
+        with fd:
             show_n = st.selectbox("Show rows", [25, 50, 100, 250, 500], index=1)
 
         cols = ["ticket_id", "created_at", "priority", "category", "subject",
                 "department", "assigned_agent", "status", "resolution_hours", "satisfaction_score"]
-        explore = df[cols].copy().sort_values(sort_col, ascending=(sort_dir == "Ascending")).head(show_n)
-        explore["created_at"]       = explore["created_at"].dt.strftime("%Y-%m-%d %H:%M")
-        explore["resolution_hours"] = explore["resolution_hours"].apply(
+        explore = df[cols].copy().sort_values(sort_col, ascending=(sort_dir == "Ascending"))
+
+        if find_query.strip():
+            q = find_query.strip().lower()
+            explore = explore[
+                explore["ticket_id"].str.lower().str.contains(q, na=False) |
+                explore["subject"].str.lower().str.contains(q, na=False) |
+                explore["assigned_agent"].str.lower().str.contains(q, na=False) |
+                explore["category"].str.lower().str.contains(q, na=False) |
+                explore["department"].str.lower().str.contains(q, na=False) |
+                explore["status"].str.lower().str.contains(q, na=False) |
+                explore["priority"].str.lower().str.contains(q, na=False)
+            ]
+
+        matched = len(explore)
+        explore = explore.head(show_n)
+        explore["created_at"]         = explore["created_at"].dt.strftime("%Y-%m-%d %H:%M")
+        explore["resolution_hours"]   = explore["resolution_hours"].apply(
             lambda x: f"{x:.1f} hrs" if pd.notna(x) else "—")
         explore["satisfaction_score"] = explore["satisfaction_score"].apply(
             lambda x: f"{'★' * int(x)}{'☆' * (5 - int(x))}" if pd.notna(x) else "—")
         explore.columns = [c.replace("_", " ").title() for c in explore.columns]
 
         st.dataframe(explore, use_container_width=True, hide_index=True, height=480)
-        st.caption(f"Showing {len(explore)} of {total:,} filtered tickets")
+
+        if find_query.strip():
+            st.caption(f"Found **{matched:,}** matching tickets · showing {len(explore)}")
+        else:
+            st.caption(f"Showing {len(explore)} of {total:,} filtered tickets")
 
     # Insights ─────────────────────────────────────────────────────────────────
     with tab5:
