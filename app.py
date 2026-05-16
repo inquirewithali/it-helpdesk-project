@@ -185,17 +185,16 @@ def chart_priority_donut(df):
                     line=dict(color="#0f1117", width=2)),
         textinfo="none",
         hovertemplate="<b>%{label}</b><br>Tickets: %{value}<extra></extra>",
+        domain=dict(y=[0.15, 1.0]),
     ))
-    fig = fig_base(fig, height=320)
+    fig = fig_base(fig, height=300)
     fig.update_layout(
         title=dict(text="Priority Split", y=0.97, x=0.5, xanchor="center"),
-        margin=dict(l=10, r=10, t=50, b=60),
+        margin=dict(l=10, r=10, t=36, b=10),
         legend=dict(
-            orientation="h",
-            x=0.5, xanchor="center",
-            y=0.12, yanchor="top",
-            font=dict(size=9),
-            bgcolor="rgba(0,0,0,0)",
+            orientation="h", x=0.5, xanchor="center",
+            y=0.08, yanchor="top",
+            font=dict(size=9), bgcolor="rgba(0,0,0,0)",
         ),
     )
     return fig
@@ -244,9 +243,19 @@ def chart_status_donut(df):
         marker=dict(colors=[STATUS_COLORS.get(s, "#8b949e") for s in counts.index],
                     line=dict(color="#0f1117", width=2)),
         textinfo="percent",
+        domain=dict(y=[0.15, 1.0]),
     ))
-    fig.update_layout(title="Status Breakdown", showlegend=True)
-    return fig_base(fig, height=280)
+    fig = fig_base(fig, height=300)
+    fig.update_layout(
+        title=dict(text="Status Breakdown", y=0.97, x=0.5, xanchor="center"),
+        margin=dict(l=10, r=10, t=36, b=10),
+        legend=dict(
+            orientation="h", x=0.5, xanchor="center",
+            y=0.08, yanchor="top",
+            font=dict(size=9), bgcolor="rgba(0,0,0,0)",
+        ),
+    )
+    return fig
 
 
 def chart_resolution_box(df):
