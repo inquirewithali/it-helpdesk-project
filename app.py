@@ -1,6 +1,10 @@
 """
 IT Help Desk Analytics Dashboard — Streamlit App
 Run: streamlit run app.py
+
+Changelog:
+- fix: SLA compliance now correctly excludes tickets with null met_sla
+  (previously open tickets were counted as SLA failures, inflating miss rate)
 """
 
 import streamlit as st
