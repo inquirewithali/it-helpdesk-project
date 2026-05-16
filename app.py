@@ -50,9 +50,11 @@ st.markdown("""
     .insight-good { border-left-color: #3fb950; }
     .insight-bad  { border-left-color: #f85149; }
 
-    #MainMenu, footer { visibility: hidden; }
-    header { visibility: hidden; }
-    [data-testid="collapsedControl"] { visibility: visible !important; }
+    #MainMenu { visibility: hidden; }
+    footer { visibility: hidden; }
+    [data-testid="stToolbar"] { display: none; }
+    [data-testid="stDecoration"] { display: none; }
+    [data-testid="stStatusWidget"] { display: none; }
     .block-container { padding-top: 1.2rem; }
 
     .find-bar input {
