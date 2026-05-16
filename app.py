@@ -669,3 +669,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+# TODO: email alert module — notify on-call when P1 backlog > 5
