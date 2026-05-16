@@ -193,7 +193,7 @@ def chart_priority_donut(df):
         legend=dict(
             orientation="h",
             x=0.5, xanchor="center",
-            y=-0.15, yanchor="top",
+            y=-0.05, yanchor="top",
             font=dict(size=9),
             bgcolor="rgba(0,0,0,0)",
         ),
