@@ -178,7 +178,7 @@ def chart_volume_trend(df):
 def chart_priority_donut(df):
     counts = df["priority"].value_counts().reindex(PRIORITY_ORDER, fill_value=0)
     pct    = (counts / counts.sum() * 100).round(1)
-    labels = [f"{p}<br>{pct[p]}%" for p in counts.index]
+    labels = [f"{p}  {pct[p]}%" for p in counts.index]
     fig = go.Figure(go.Pie(
         labels=labels, values=counts.values, hole=0.58,
         marker=dict(colors=[PRIORITY_COLORS[p] for p in counts.index],
@@ -190,8 +190,11 @@ def chart_priority_donut(df):
         title="Priority Split",
         showlegend=True,
         legend=dict(
-            orientation="v", x=1.02, y=0.5,
-            font=dict(size=10), bgcolor="rgba(0,0,0,0)",
+            orientation="h",
+            x=0.5, xanchor="center",
+            y=-0.12, yanchor="top",
+            font=dict(size=9),
+            bgcolor="rgba(0,0,0,0)",
         ),
     )
     return fig_base(fig, height=300)
