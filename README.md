@@ -1,127 +1,61 @@
 # IT Help Desk Analytics Dashboard
 
-An interactive analytics dashboard for IT support ticket data — built with Streamlit and Plotly. Demonstrates end-to-end data analyst skills: realistic data generation, SQL-style analysis, KPI design, and interactive visualization.
+A fully interactive analytics dashboard that tracks, filters, and visualizes IT support ticket data across agents, departments, and time — built with Python, Streamlit, and Plotly.
 
-![Dashboard Preview](output/dashboard.png?v=2)
+**🚀 Live Demo:** [panahrahmat-dashboard-project.streamlit.app](https://panahrahmat-dashboard-project.streamlit.app/)
 
-> **Live demo:** `streamlit run app.py` → opens at `http://localhost:8501`
+![Dashboard Preview](output/preview.png)
+
+---
+
+## What It Does
+
+This dashboard simulates a real IT help desk environment with 3,000 synthetic tickets spanning two years. It lets you slice the data any way you want using the sidebar filters and immediately see how KPIs, charts, and insights update in real time.
+
+**Key metrics tracked:**
+- **MTTR** — Mean time to resolve tickets, broken down by priority and agent
+- **SLA Compliance** — Whether tickets were resolved within the SLA target window (4 hrs for P1, up to 7 days for P4)
+- **CSAT Score** — Customer satisfaction rating (1–5) per agent and category
+- **Backlog** — Count of open, in-progress, and pending tickets
 
 ---
 
 ## Features
 
-### Interactive Filters (sidebar)
-- **Full-text search** — ticket ID, subject, agent name, department, category
-- **Date range picker** — any custom window across 2 years of history
-- **Multi-select filters** — Priority, Category, Department, Agent, Status
-- All charts and KPIs update instantly based on active filters
-
-### KPI Tiles (with trend deltas)
-| Metric | Description |
-|---|---|
-| Total Tickets | Volume in selected period vs. prior period |
-| Resolution Rate | % resolved or closed |
-| Avg MTTR | Mean time to resolution (hours) |
-| SLA Compliance | % of tickets resolved within SLA target |
-| Avg CSAT | Customer satisfaction score (1–5) |
-| Open / Backlog | Currently unresolved tickets |
+### Sidebar Filters
+- Full-text search across ticket ID, subject, agent, department, and category
+- Date range picker
+- Multi-select filters for Priority, Category, Department, Agent, and Status
+- Export filtered data as CSV
+- Reset all filters in one click
 
 ### Dashboard Tabs
 
-**Overview**
-- Monthly volume trend with 3-month rolling average
-- Priority split donut chart
-- SLA compliance by priority tier (color-coded vs. 90% target)
-- Tickets by category (horizontal bar)
-- Status breakdown donut
-- Resolution time distribution (box plot by priority, with SLA target lines)
-
-**Agent Performance**
-- CSAT score bar chart (color-coded: green ≥ 4.0, orange ≥ 3.5, red < 3.5)
-- MTTR vs CSAT scatter plot (bubble size = ticket volume, color = SLA %)
-- Sortable agent leaderboard table with color-coded CSAT and SLA columns
-
-**Trends**
-- Ticket submission heatmap (day of week × hour of day)
-- Hour-of-day volume bar chart (peak hours highlighted)
-- Category volume over time (multi-line)
-- Tickets by department (bar chart, color = CSAT)
-
-**Ticket Explorer**
-- Sortable, filterable table of all tickets
-- Sort by any column, choose ascending/descending
-- Show 25/50/100/250/500 rows
-- Star-rating display for CSAT scores
-
-**Insights**
-- Auto-generated written callouts (SLA health, worst category, struggling agents, backlog alerts, volume trends)
-- Top 10 recurring issues table
-- Low CSAT tickets deep-dive (rated 1–2)
-
-### Export
-- **Download CSV** button exports the current filtered dataset
+| Tab | What's Inside |
+|---|---|
+| **Overview** | Monthly volume trend, priority donut, SLA bars, category breakdown, status split, resolution time box plots |
+| **Agent Performance** | CSAT bar chart, MTTR vs CSAT scatter plot, color-coded agent leaderboard table |
+| **Trends** | Hour-of-day volume, day × hour heatmap, category over time, tickets by department |
+| **Ticket Explorer** | Sortable, searchable table with find-on-page, star ratings, row count control |
+| **Insights** | Auto-generated callouts, recurring issues table, low CSAT deep dive |
 
 ---
 
 ## Quick Start
 
 ```bash
-# 1. Clone and install
-git clone https://github.com/YOUR_USERNAME/helpdesk-analytics.git
-cd helpdesk-analytics
+git clone https://github.com/inquirewithali/it-helpdesk-project.git
+cd it-helpdesk-project
 pip install -r requirements.txt
-
-# 2. Generate the dataset
 python generate_data.py
-# → data/tickets.csv (3,000 rows, 2 years of realistic patterns)
-
-# 3. Launch the dashboard
 streamlit run app.py
-# → http://localhost:8501
 ```
 
 ---
 
-## Dataset — Realistic Patterns
+## SQL Analysis
 
-The synthetic dataset is not random noise — it has real structure:
-
-- **Monday morning spikes** — more tickets submitted Mon 8–11am
-- **Seasonal volume** — Q1/Q4 heavier (onboarding, year-end), summer lighter
-- **November hardware surge** — simulates annual equipment refresh
-- **Agent performance variance** — agents have distinct speed and CSAT profiles, including one clear underperformer
-- **Log-normal resolution times** — realistic skew (most tickets fast, some very slow)
-- **Department-agent affinity** — agents are biased toward certain departments
-
-### Agent Profiles
-
-| Agent | Profile |
-|---|---|
-| Michael Torres | Fast, high CSAT — top performer |
-| Christopher Nguyen | Reliable, above average |
-| Jennifer Walsh | Solid, finance/legal focus |
-| Kevin Chen | Consistent mid-tier |
-| David Kim | Average |
-| Amanda Brooks | Slightly slow |
-| Rachel Patel | Below average CSAT |
-| Sarah Rivera | Struggling — low CSAT outlier |
-
----
-
-## SQL Analysis (`analysis.sql`)
-
-10 production-style queries for SQLite / DuckDB / PostgreSQL:
-
-1. Executive KPI summary
-2. Monthly volume trend
-3. SLA compliance by priority
-4. Category breakdown with resolution time
-5. Agent performance leaderboard
-6. Department ticket distribution
-7. Chronic / repeat issue detection
-8. Hour-of-day staffing patterns
-9. Low CSAT deep dive
-10. Current backlog with age
+`analysis.sql` contains 10 production-style queries compatible with SQLite, PostgreSQL, and DuckDB:
 
 ```bash
 sqlite3 helpdesk.db
@@ -130,50 +64,41 @@ sqlite3 helpdesk.db
 .read analysis.sql
 ```
 
+Queries cover: executive KPI summary, SLA compliance by priority, agent leaderboard, department breakdown, repeat issue detection, hour-of-day staffing patterns, low CSAT deep dive, and backlog aging.
+
 ---
 
 ## Dataset Schema
 
-| Column | Type | Description |
-|---|---|---|
-| `ticket_id` | string | INC00001–INC03000 |
-| `created_at` | datetime | Submission timestamp |
-| `resolved_at` | datetime | Resolution timestamp (blank if open) |
-| `category` | string | Hardware / Software / Network / … |
-| `priority` | string | P1 Critical → P4 Low |
-| `status` | string | Open / In Progress / Pending User / Resolved / Closed |
-| `subject` | string | Short issue description |
-| `department` | string | Requesting department |
-| `assigned_agent` | string | Handling technician |
-| `resolution_hours` | float | Hours from open to close |
-| `met_sla` | boolean | Whether SLA target was met |
-| `satisfaction_score` | int | CSAT 1–5 (blank if unresolved) |
-
-## SLA Targets
-
-| Priority | Target |
+| Column | Description |
 |---|---|
-| P1 – Critical | 4 hours |
-| P2 – High | 24 hours |
-| P3 – Medium | 72 hours |
-| P4 – Low | 168 hours |
+| `ticket_id` | Unique ID (INC00001–INC03000) |
+| `created_at` | Submission timestamp |
+| `resolved_at` | Resolution timestamp |
+| `category` | Hardware / Software / Network / … |
+| `priority` | P1 Critical → P4 Low |
+| `status` | Open / In Progress / Pending / Resolved / Closed |
+| `department` | Requesting department |
+| `assigned_agent` | Handling technician |
+| `resolution_hours` | Hours from open to close |
+| `met_sla` | Whether SLA target was met |
+| `satisfaction_score` | CSAT rating 1–5 |
 
 ---
 
 ## Project Structure
 
 ```
-helpdesk-analytics/
-├── app.py               # Streamlit dashboard (main entry point)
-├── generate_data.py     # Realistic synthetic dataset generator
+it-helpdesk-project/
+├── app.py               # Streamlit dashboard
+├── generate_data.py     # Synthetic dataset generator
+├── dashboard.py         # Static PNG export
 ├── analysis.sql         # 10 SQL KPI queries
 ├── requirements.txt
 ├── data/
-│   └── tickets.csv      # 3,000-row dataset
+│   └── tickets.csv
 └── output/
-    └── dashboard.png    # Static preview image
+    └── preview.png
 ```
-
----
 
 *Dataset is fully synthetic — no real user data.*
