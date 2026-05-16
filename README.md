@@ -4,7 +4,7 @@ A fully interactive analytics dashboard that tracks, filters, and visualizes IT 
 
 **🚀 Live Demo:** [panahrahmat-dashboard-project.streamlit.app](https://panahrahmat-dashboard-project.streamlit.app/)
 
-![Dashboard Preview](output/preview.png)
+![Dashboard Preview](output/dashboard_preview.png)
 
 ---
 
