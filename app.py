@@ -387,6 +387,9 @@ def main():
         if st.button("Reset Filters", use_container_width=True):
             st.rerun()
 
+        st.markdown("### Export")
+        export_placeholder = st.empty()
+
     df      = apply_filters(df_raw, d_start, d_end, priorities, categories, departments,
                             agents, statuses, search)
     df_prev = get_prior(df_raw, d_start, d_end)
@@ -413,17 +416,17 @@ def main():
     open_count    = df[df["status"].isin(OPEN_STATUSES)].shape[0]
     prev_open     = df_prev[df_prev["status"].isin(OPEN_STATUSES)].shape[0]
 
-    # ── Header ────────────────────────────────────────────────────────────────
-    h1, h2 = st.columns([4, 1])
-    with h1:
-        st.markdown("## IT Help Desk Analytics Dashboard")
-        st.caption(f"Showing **{total:,}** tickets · {d_start} → {d_end}")
-    with h2:
-        csv_bytes = df.drop(columns=["month", "weekday", "hour"], errors="ignore") \
-                      .to_csv(index=False).encode()
-        st.download_button("⬇ Export CSV", csv_bytes, "filtered_tickets.csv",
-                           "text/csv", use_container_width=True)
+    # ── Sidebar export (needs filtered df, so rendered here) ──────────────────
+    csv_bytes = df.drop(columns=["month", "weekday", "hour"], errors="ignore") \
+                  .to_csv(index=False).encode()
+    export_placeholder.download_button(
+        "⬇ Export Filtered CSV", csv_bytes, "filtered_tickets.csv",
+        "text/csv", use_container_width=True,
+    )
 
+    # ── Header ────────────────────────────────────────────────────────────────
+    st.markdown("## IT Help Desk Analytics Dashboard")
+    st.caption(f"Showing **{total:,}** tickets · {d_start} → {d_end}")
     st.markdown("---")
 
     k1, k2, k3, k4, k5, k6 = st.columns(6)
