@@ -50,11 +50,7 @@ st.markdown("""
     .insight-good { border-left-color: #3fb950; }
     .insight-bad  { border-left-color: #f85149; }
 
-    #MainMenu { visibility: hidden; }
     footer { visibility: hidden; }
-    [data-testid="stToolbar"] { display: none; }
-    [data-testid="stDecoration"] { display: none; }
-    [data-testid="stStatusWidget"] { display: none; }
     .block-container { padding-top: 1.2rem; }
 
     .find-bar input {
@@ -181,13 +177,23 @@ def chart_volume_trend(df):
 
 def chart_priority_donut(df):
     counts = df["priority"].value_counts().reindex(PRIORITY_ORDER, fill_value=0)
+    pct    = (counts / counts.sum() * 100).round(1)
+    labels = [f"{p}<br>{pct[p]}%" for p in counts.index]
     fig = go.Figure(go.Pie(
-        labels=counts.index, values=counts.values, hole=0.55,
+        labels=labels, values=counts.values, hole=0.58,
         marker=dict(colors=[PRIORITY_COLORS[p] for p in counts.index],
                     line=dict(color="#0f1117", width=2)),
-        textinfo="percent", textfont=dict(size=11),
+        textinfo="none",
+        hovertemplate="<b>%{label}</b><br>Tickets: %{value}<extra></extra>",
     ))
-    fig.update_layout(title="Priority Split", showlegend=True)
+    fig.update_layout(
+        title="Priority Split",
+        showlegend=True,
+        legend=dict(
+            orientation="v", x=1.02, y=0.5,
+            font=dict(size=10), bgcolor="rgba(0,0,0,0)",
+        ),
+    )
     return fig_base(fig, height=300)
 
 
